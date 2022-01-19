@@ -38,8 +38,8 @@ Guillaume Bienkowski — Braincube
 # Récupération des sources
 
 ```
-git clone https://github.com/masterind4/crypto.git
-code crypto/
+git clone https://github.com/masterind4/masterind4.github.io.git
+code masterind4.github.io/
 ```
 
 ---

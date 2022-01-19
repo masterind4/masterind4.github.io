@@ -216,7 +216,7 @@ salted_hash = salt + '!' + sha256( salt + password )
 
 Rendez-vous ici: https://masterind4.github.io
 
-Ou directement: `git clone https://github.com/masterind4/crypto.git`
+Ou directement: `git clone https://github.com/masterind4/masterind4.github.io.git`
 
 
 
