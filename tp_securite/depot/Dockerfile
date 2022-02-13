@@ -6,6 +6,7 @@ ENV FILEGATOR_VERSION=v7.5.1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN apt update && apt install -y unzip libzip-dev
 
+# Main program is filegator. Versions are available on https://filegator.io
 RUN curl -LJ -o filegator.zip https://github.com/filegator/filegator/releases/download/${FILEGATOR_VERSION}/filegator_${FILEGATOR_VERSION}.zip && \
     unzip filegator.zip -d /var/www/html/ && \
     mv /var/www/html/filegator/* /var/www/html/ && \
