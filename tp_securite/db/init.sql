@@ -18,7 +18,9 @@ VALUES
 -- admin:An0tHerPassW0rd // hash généré via https://phppasswordhash.com/
 ('admin', 'Admin', 'admin', 'read|write|upload|download|batchdownload|zip', '/', '$2y$10$n3fHgzxlXG/qnULh8BjMfuN8ysnV8kB8cse7XuB3M/BKoic7H9zDq'),
 -- fournisseur:HarDt0guEss // hash généré via https://phppasswordhash.com/
-('fournisseur', 'Fournisseur', 'user', 'read|write|upload|download', '/', '$2y$10$bdk328EKlSqWnfUYCQDCi.8R77R/1lkYllSXsZnennhVn5bjdfQUK'),
+('fournisseurA', 'Fournisseur', 'user', 'read|write|upload|download', '/A', '$2y$10$JzzX.qaznBFpZbvQcjRmMecJg2tFvxjQrLTJ5lx06vLm/AJZvlSRy'),
+('fournisseurB', 'Fournisseur', 'user', 'read|write|upload|download', '/B', '$2y$10$JmYfR2rxbodAPn3ufDhG8u4fhiG/Lz7aAOYiAapXBEX/O5h.YNaC6'),
+('fournisseurC', 'Fournisseur', 'user', 'read|write|upload|download', '/C', '$2y$10$cU35RhTwEiEGzFx3DZjlpe1JMSQFKMZ9ChGLJC2p9DNtZnScciFnC'),
 -- userinterne:SomeThinGh4sToGive // hash généré via https://phppasswordhash.com/
 ('userinterne', 'User Interne', 'user', 'read|write|upload|download', '/', '$2y$10$GY2aC2EIaBvm6h48NfylW.dbA74TaMFykfvL4JHxBgDUq9rdwifpy')
 ;

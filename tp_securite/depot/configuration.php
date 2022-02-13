@@ -104,8 +104,8 @@ return [
             'config' => [
                 'driver' => 'mysqli',
                 'host' => 'database',
-                'username' => 'root',
-                'password' => 'Av3rYg0oDp4sZo4D',
+                'username' => 'depot',
+                'password' => '2345678',
                 'database' => 'authentication_depot',
             ],
         ],

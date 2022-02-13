@@ -17,6 +17,8 @@ services:
     image: mariadb:10.7
     environment:
       MARIADB_ROOT_PASSWORD: Av3rYg0oDp4sZo4D
+      MARIADB_USER: depot
+      MARIADB_PASSWORD: 2345678
       MARIADB_DATABASE: authentication_depot
     volumes:
       - ./db:/docker-entrypoint-initdb.d:rw

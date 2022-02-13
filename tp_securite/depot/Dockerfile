@@ -1,5 +1,5 @@
-FROM php:7.4.13-apache
-ENV FILEGATOR_VERSION=v7.5.1
+FROM php:7.4-apache
+ENV FILEGATOR_VERSION=v7.7.1
 
 
 
