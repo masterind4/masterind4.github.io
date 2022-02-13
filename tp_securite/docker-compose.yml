@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+  depot:
+    build: ./depot
+    scale: 2
+    restart: always
+    environment:
+      LC_ALL: en_US.UTF-8
+    volumes:
+      - ./run/stockage/:/data:rw
+      - ./configuration.php:/var/www/html/configuration.php:ro
+      - ./run/logs:/private/logs:rw
+    ports:
+      - 8080:80
+
+  database:
+    image: mariadb:10.7
+    environment:
+      MARIADB_ROOT_PASSWORD: Av3rYg0oDp4sZo4D
+      MARIADB_DATABASE: authentication_depot
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d:rw
+      - ./run/db:/var/lib/mysql:rw
+
+  backup:
+    image: atmoz/sftp:alpine
+    command: backup:B4ckUpP45s:1001
+    volumes:
+      - ./run/backup:/home/backup:rw
