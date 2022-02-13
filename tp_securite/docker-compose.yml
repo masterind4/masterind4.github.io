@@ -3,7 +3,6 @@ version: "2"
 services:
   depot:
     build: ./depot
-    scale: 2
     restart: always
     environment:
       LC_ALL: en_US.UTF-8
