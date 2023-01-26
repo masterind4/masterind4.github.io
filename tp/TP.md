@@ -2,7 +2,7 @@
 marp: true
 theme: default
 paginate: true
-footer: "Master Industrie 4.0 - 2021-2022 — Cryptographie — Guillaume Bienkowski"
+footer: "Master Industrie 4.0 - 2022-2023 — Cryptographie — Guillaume Bienkowski"
 math: 'mathjax'
 ---
 
@@ -219,7 +219,7 @@ Dernier test: relancez en changeant l'URL pour `https://localhost:4443`. Que se 
 
 Rendez-vous sur https://test.mosquitto.org
 
-Suivez les instructions pour créer une CSR d'un certificat à vous, et faites le signer par le rootCA de MQTT via leur interface.
+Suivez les instructions pour créer une CSR d'un certificat à vous, et faites le signer par le rootCA de MQTT via leur interface (chercher "generate your own certificate").
 
 Pensez bien à récupérer le rootCA de mosquitto.
 
