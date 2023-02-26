@@ -2,7 +2,7 @@
 marp: true
 theme: default
 paginate: true
-footer: "Master Industrie 4.0 - 2021-2022 — Cryptographie — Guillaume Bienkowski"
+footer: "Master Industrie 4.0 - 2022-2023 — Cryptographie — Guillaume Bienkowski"
 math: 'mathjax'
 ---
 
@@ -62,8 +62,10 @@ On dit que $f$ est *injective*.
 
 # Exemples de fonctions de hachage (imparfaites...)
 
+$d$ est la taille de l'ensemble de sortie $Y$ en bits.
+
 - famille SHA (1, 256, ...) ($160 ≤ d ≤ 512$)
-- MD5 ($d = 128$),
+- MD5 ($d = 128$), dépréciée! Ne jamais utiliser.
 - Whirlpool ($d = 512$)
 - BCrypt ($d=192$), Scrypt, Argon2 ($d=256$)
 - $maFonction(x) = x \mod 32768$ (pas très efficace celle là)
@@ -106,6 +108,20 @@ Par exemple:
 - Les valeurs retournées sont réparties uniformément dans l'espace de sortie $Y$
 
 ---
+
+Collisions trouvées pour:
+
+- MD5 créé en 91, collision en 96.
+- SHA1 créé en 95, fragile dès 2005, collision en 2017
+
+
+Les fameux PDF de résultats des [élection Américaines de 2008](https://www.win.tue.nl/hashclash/Nostradamus/):
+
+> November 30, 2007 - We have used a Sony Playstation 3 to correctly predict the outcome of the 2008 US presidential elections. In order not to influence the voters we keep our prediction secret, but commit to it by publishing its cryptographic hash on this website. The document with the correct prediction and matching hash will be revealed after the elections.
+
+
+---
+
 <!-- header: "Applications aux fonctions de Hachage" -->
 
 # Applications des hash
@@ -127,9 +143,9 @@ Par exemple:
 Permet de s'assurer que le fichier (gros) qu'on a téléchargé est bien le même que celui hébergé par le serveur.
 
 ```
-c685b85cf9f248633ba3cd2b9f9e781fa03225587e0c332aef2063f6877a1f0622f56d44cf0690087b0ca36883147ecb5593e3da6f965968402cdbdf12f6dd74  debian-11.2.0-amd64-netinst.iso
-f2da0996196f19585b464e48bfb6b8e4938eb596667d92a5ebd428e1a88a1a115c00f1d052f350eca44fa08f42f0500c63351763dfb47f1e1783f917590c175d  debian-edu-11.2.0-amd64-netinst.iso
-9b5b0475fbb3235ebb7da71415f10921b02131b7debc9325403f85f9f6798a3e902d6257831a7ec9c7aef3256817fb76c4f01bb5d035bfcdb3dc24da24fa1bda  debian-mac-11.2.0-amd64-netinst.iso
+224cd98011b9184e49f858a46096c6ff4894adff8945ce89b194541afdfd93b73b4666b0705234bd4dff42c0a914fdb6037dd0982efb5813e8a553d8e92e6f51  debian-11.6.0-amd64-netinst.iso
+7d08148ad6f3de1d89ef4b9e3272fcbdb5269aebf0c00de181c82371b935a18a749212df7adb35d1b3f3b7afc32a514854f4794b2d3e94f31e955fe66b83a9e2  debian-edu-11.6.0-amd64-netinst.iso
+8102fd7e087d91bc5d696fede5c24298374b6555fc84a46f708c454e00d9cb2212a971895207ec8c2b1728f579926a7fc764c92694e6bd6b24277f0f91d82da5  debian-mac-11.6.0-amd64-netinst.iso
 ```
 
 ---
@@ -168,7 +184,7 @@ Exercice mental:
 - alors on a $62^8 = 218340105584896$ combinaisons possibles
 - chaque sha256 prend.. 256bits (32 octets)
 - Le stockage nécessaire pour stocker un dictionnaire inverse:
-  $62^8 * 32bits =6,2\nobreakspace Pio$
+  $62^8 * 32octets =6,2\nobreakspace Pio$
 
 À la portée de n'importe quelle Fortune 500, voire du commun des mortels pour quelques heures en louant du disque chez Amazon.
 
@@ -188,16 +204,35 @@ def sha256(s):
   return hashlib.sha256(s.encode('utf-8')).hexdigest()
 
 password = '4gNnLar5'
-salt = 'UneStringRandomDeLongueurEntre5Et16'
+salt = getRandomString(length=math.randint(5,15))
+# par exemple 'VmBgeaZ2PN'
 
 standard_hash = sha256(password)
-# c36b9fc5e51d59f5179e9cc2a0e1f02ea6c2f12448e9e1dfe01f68786092a924
-
+# c36b9fc5e51d59f5179e9cc2a0e1f02ea6c2f12448e9e1dfe01f68786092a924s
 salted_hash = salt + '!' + sha256( salt + password )
-# UneStringRandomDeLongueurEntre5Et16!93d4b242b475a73d8f2d1de1...
+# VmBgeaZ2PN!93d4b242b475a73d8f2d1de1...
 ```
 
 => password de longueur 8, mais sha256 basé sur une longueur aléatoire.
+
+---
+
+### Salage - pourquoi ça marche ?
+
+Attaque par dictionnaire ou par Rainbow table: basé sur le principe que le mot de passe fait une taille "raisonnable".
+
+```
+User    Hash            Salted hash
+---------------------------------------------
+alice   4420d1918..     3’r43d!!3dae5f…
+jason   695ddccd9..     4fTfcz!!5g896da..
+mario   cd5cb49b8..     Jeikd`cgh!!de34a28’..
+teresa  73fb51a0c..     ùefs5FS!!f290ff5..
+bob     4420d1918..     èFGz4Ds!!99g6bde..
+mike    77b177de..      DR"S2ç!!22d45dd..
+```
+
+Facile de trouver les mots de passe identiques avec un hash simple. Difficile avec un hash salé.
 
 ---
 
@@ -218,6 +253,7 @@ Rendez-vous ici: https://masterind4.github.io
 
 Ou directement: `git clone https://github.com/masterind4/masterind4.github.io.git`
 
+Réalisez les exercices sur les fonctions de hachage.
 
 
 ---
@@ -263,7 +299,7 @@ On continue sur le TP, exercices sur la signature digitale.
 
 - Un *hash* (ou empreinte) assure l'intégrité de la donnée
 - Une signature assure *l'authenticité* de la donnée
-- (Le chiffrement assure la *confidentialité* de la donnée, cf ce matin)
+- (Le chiffrement assure la *confidentialité* de la donnée, cf le cours précédent)
 
 ---
 
@@ -284,9 +320,6 @@ Les certificats sont à la base de:
 
 Format standardisé: X.509
 
-> Tout est question de confiance
->  -- Guillaume B., 2022
-
 ---
 <!-- header: "Certificats" -->
 
@@ -295,7 +328,7 @@ Un certificat contient:
 - une clé *publique*
 - les informations du certificat (exemple: nom de domaine lié à ce certificat, date d'expiration, etc.)
 - une signature de ce certificat (rappel: signature =
-  `chiffrage( clé privée, HASH( contenu du certificat) )` ) par un autre certificat tiers
+  `chiffrage( clé privée, HASH( contenu du certificat) )` ) par la clé d'un autre certificat, ou la sienne
 
 La clé *privée* associée à la clé *publique* permet d'authentifier celui qui présente le certificat
 
@@ -304,6 +337,10 @@ La signature du certificat provient:
 - d'une autorité de certification dont la clé publique est dans le porte clé de confiance (dans l'OS ou le navigateur)
 - ou de la machine qui présente le certificat ("certificat autosigné"), dans ce cas la clé privée
 
+
+---
+
+![bg fit](signatures.png)
 
 ---
 
@@ -341,9 +378,14 @@ $ echo \
 
 1. Le client établit un canal sécurisé avec le serveur (en utilisant un echange via Diffie-Helman)
 2. Le serveur web présente son certificat au client
-3. Le client vérifie la chaîne de certificats pour authentifier le serveur. Envoie un challenge encrypté avec la clé publique du serveur, et envoie sa clé publique
+3. Le client vérifie la chaîne de certificats pour authentifier le serveur. Envoie un challenge chiffré avec la clé publique du serveur, et envoie sa clé publique
 4. Le serveur web décrypte le challenge avec sa clé privée et le crypte avec la clé publique du client
 5. Si le serveur arrive à renvoyer le challenge au client, c'est qu'il possède la clé privée.
+
+
+---
+
+![fit bg](certifcheck.png)
 
 ---
 
@@ -452,6 +494,10 @@ section {
 3. De mon côté je suis sûr de parler au même serveur car il m'a fourni sa clé publique.
 
 Authentification très forte, résiste aux MITM.
+
+---
+
+On finit les exercices de TP, partie "Certificats"
 
 ---
 # Questions
