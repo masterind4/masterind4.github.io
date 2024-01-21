@@ -2,7 +2,7 @@
 marp: true
 theme: default
 paginate: true
-footer: "Master Industrie 4.0 - 2022-2023 — Cryptographie — Guillaume Bienkowski"
+footer: "Master Industrie 4.0 - 2023-2024 — Cryptographie — Guillaume Bienkowski"
 math: 'mathjax'
 ---
 
@@ -30,10 +30,17 @@ Guillaume Bienkowski — Braincube
 
 # Plan
 
-- Fonctions de hachage (~1h)
-- Signatures digitales (~1h)
-- Certificats (~1h)
-- TP tout le long (~1h)
+Cours
+- Fonctions de hachage
+- Signatures digitales
+- Certificats
+
+$\rightarrow$ Durée 1h30. 40 Slides. 2 minutes par slides, c'est *intense*.
+
+Mise en pratique (TP)
+
+$\rightarrow$ Durée 1h30
+
 
 ---
 <!-- header: "Fonctions de Hachage" -->
@@ -41,11 +48,13 @@ Guillaume Bienkowski — Braincube
 
 ## Définition
 
-> Une fonction de hachage est une fonction qui convertit une entrée de taille arbitraire en sortie de taille fixe
+> Une fonction de hachage est une fonction qui convertit une entrée de taille arbitraire en sortie de taille déterminée
+
 
 ## Terminologie
 
 Le résultat d'une fonction de hachage s'appelle un *hash* ou une *empreinte*, parfois un *condensat*
+
 
 ---
 
@@ -58,31 +67,12 @@ On dit que $f$ est *injective*.
 **Implications**: si $X$ est grand alors $Y$ sera au moins aussi vaste => ne rentre pas dans la RAM d'un ordinateur
 **En pratique**: $Y$ a une taille finie (énorme, mais finie).
 
----
+![fit drop-shadow center](inject.svg)
 
-# Exemples de fonctions de hachage (imparfaites...)
-
-$d$ est la taille de l'ensemble de sortie $Y$ en bits.
-
-- famille SHA (1, 256, ...) ($160 ≤ d ≤ 512$)
-- MD5 ($d = 128$), dépréciée! Ne jamais utiliser.
-- Whirlpool ($d = 512$)
-- BCrypt ($d=192$), Scrypt, Argon2 ($d=256$)
-- $maFonction(x) = x \mod 32768$ (pas très efficace celle là)
 
 ---
-# Exemple sous linux
 
-    $ (echo "123456789" | shasum); (echo "123456779" | shasum)
-                    ^____________________________^
-
-    6d78392a5886177fe5b86e585a0b695a2bcd01a05504b3c4e38bc8eeb21e8326
-    8f9d6dbc5c656b3fd63f25e72c3ec9d7738f198238a46eeb01875ee102c34860
-
-### Petit changement en entrée => grande différence en sortie
----
-
-# Collisions
+# Collision
 
 Une collision, c'est quand deux valeurs en entrée d'une fonction de hachage donnent la même sortie.
 
@@ -95,17 +85,47 @@ Par exemple:
 >>> mafonctiondehachage(10)
 10
 >>> mafonctiondehachage(32778)
-10 # :-( je l'avais dit qu'elle n'était pas terrible cette fonction
+10
 >>>
 ```
 
 ---
 
-# Propriétés souhaitées d'une fonction de Hachage
-- $f(x) = y$ est rapide à calculer
-- Trouver $x$ à partir de $y$ est quasi impossible ("fonction à sens unique")
-- Il doit être quasi impossible de trouver deux $x$ et $x'$ qui donnent le même *hash* (collision)
-- Les valeurs retournées sont réparties uniformément dans l'espace de sortie $Y$
+# Fonction de hachage cryptographique
+
+Une fonction de hachage cryptographique idéale possède les six propriétés suivantes:
+
+- un même message aura toujours la même valeur de hachage (**déterminisme**)
+- le hash d'un message se calcule "facilement" (pour un ordinateur)
+- impossible, pour un hash donné, de construire un message ayant cette valeur (**préimage**)
+- impossible de trouver un second message ayant le même hash qu'un message donné (**seconde préimage**)
+- impossible de trouver deux messages différents ayant le même hash (**collision**)
+- modifier un tant soit peu un message modifie **considérablement** la valeur de hachage
+
+
+---
+
+# Exemples de fonctions de hachage cryptographiques
+
+$d$ est la taille de l'ensemble de sortie $Y$ en bits.
+
+- famille SHA (1, 256, ...) ($160 ≤ d ≤ 512$)
+- MD5 ($d = 128$), dépréciée! Ne jamais utiliser.
+- Whirlpool ($d = 512$)
+- BCrypt ($d=192$), Scrypt, Argon2 ($d=256$)
+- $maFonction(x) = x \mod 32768$ ($d=15$) (pas très efficace celle là)
+
+---
+# Exemple sous linux
+
+    $ (echo "123456789" | shasum) \
+      (echo "123456779" | shasum)
+                    ^
+
+    6d78392a5886177fe5b86e585a0b695a2bcd01a05504b3c4e38bc8eeb21e8326
+    8f9d6dbc5c656b3fd63f25e72c3ec9d7738f198238a46eeb01875ee102c34860
+
+### Petit changement en entrée => grande différence en sortie
 
 ---
 
@@ -115,9 +135,9 @@ Collisions trouvées pour:
 - SHA1 créé en 95, fragile dès 2005, collision en 2017
 
 
-Les fameux PDF de résultats des [élection Américaines de 2008](https://www.win.tue.nl/hashclash/Nostradamus/):
+PDF de résultats des [élection Américaines de 2008](https://www.win.tue.nl/hashclash/Nostradamus/)
 
-> November 30, 2007 - We have used a Sony Playstation 3 to correctly predict the outcome of the 2008 US presidential elections. In order not to influence the voters we keep our prediction secret, but commit to it by publishing its cryptographic hash on this website. The document with the correct prediction and matching hash will be revealed after the elections.
+![bg right center fit](elections2009.png)
 
 
 ---
@@ -143,9 +163,9 @@ Les fameux PDF de résultats des [élection Américaines de 2008](https://www.wi
 Permet de s'assurer que le fichier (gros) qu'on a téléchargé est bien le même que celui hébergé par le serveur.
 
 ```
-224cd98011b9184e49f858a46096c6ff4894adff8945ce89b194541afdfd93b73b4666b0705234bd4dff42c0a914fdb6037dd0982efb5813e8a553d8e92e6f51  debian-11.6.0-amd64-netinst.iso
-7d08148ad6f3de1d89ef4b9e3272fcbdb5269aebf0c00de181c82371b935a18a749212df7adb35d1b3f3b7afc32a514854f4794b2d3e94f31e955fe66b83a9e2  debian-edu-11.6.0-amd64-netinst.iso
-8102fd7e087d91bc5d696fede5c24298374b6555fc84a46f708c454e00d9cb2212a971895207ec8c2b1728f579926a7fc764c92694e6bd6b24277f0f91d82da5  debian-mac-11.6.0-amd64-netinst.iso
+0262488ce2cec6d95a6c9002cfba8b81ac0d1c29fe7993aa5af30f81cecad3eb66558b9d8689a86b57bf12b8cbeab1e11d128a53356b288d48e339bb003dace5  debian-12.4.0-amd64-netinst.iso
+e0da46ec9a0000c79f8c1abe08798afa674b71a4f232b4760c28bcb1717d3c7f6962fa1523769576a924c879710cde6f5ac82402633c4b84c8da6a48c37d61ed  debian-edu-12.4.0-amd64-netinst.iso
+fecfa87d9bcf555a2181078e1d629ebd11554b78fbd59888a438ec2c1b4f4cb27eb75013ebdb8f86cfac5fad19a07bca84dc1bc00b0787fc842d5e318748de84  debian-mac-12.4.0-amd64-netinst.iso
 ```
 
 ---
@@ -177,14 +197,9 @@ L'utilisateur envoie son login et mot de passe, on le hash, et on vérifie que c
 
 Attaques: **Rainbow Tables** et autres attaques basées sur un dictionnaire
 
-Exercice mental:
-
-- longueur password = 8
-- symboles alphanumériques (`0-9`, `a-z`, `A-Z`) => 62 symboles différents
-- alors on a $62^8 = 218340105584896$ combinaisons possibles
-- chaque sha256 prend.. 256bits (32 octets)
-- Le stockage nécessaire pour stocker un dictionnaire inverse:
-  $62^8 * 32octets =6,2\nobreakspace Pio$
+- 1 mot de passe de 8 caractères de long contient (`0-9`, `a-z`, `A-Z`) => 62 symboles différents
+- $62^8 = 218340105584896$ combinaisons possibles, un sha256 est stocké sur 32 bits
+- $62^8 * 32$octets $=6.2\nobreakspace Pio$
 
 À la portée de n'importe quelle Fortune 500, voire du commun des mortels pour quelques heures en louant du disque chez Amazon.
 
@@ -193,46 +208,62 @@ Solution: *saler* son hash.
 
 ---
 
-### Salage
+### Salage - Problématique
 
-On ajoute un petit peut d'aléatoire dans le hash pour tempérer les attaques par dictionnaires.
+|User |    Hash    |
+|-----|------------|
+|alice |  `4420d1918..`|
+|jason |  `695ddccd9..`|
+|mario  | `cd5cb49b8..`|
+|teresa | `73fb51a0c..`|
+|bob   |  `4420d1918..`|
+|mike  |  `77b177de4..`|
+
+2 utilisateurs ont manifestement le même mot de passe. Qui sont-ils?
+
+
+---
+
+### Salage - comment on fait
+
+On ajoute un petit peu d'aléatoire dans le calcul du hash pour tempérer les attaques par dictionnaires.
 
 ```python
-import hashlib
-
-def sha256(s):
-  return hashlib.sha256(s.encode('utf-8')).hexdigest()
-
 password = '4gNnLar5'
 salt = getRandomString(length=math.randint(5,15))
-# par exemple 'VmBgeaZ2PN'
+# par exemple salt='VmBgeaZ2PN', différent pour chaque password stocké!
 
-standard_hash = sha256(password)
-# c36b9fc5e51d59f5179e9cc2a0e1f02ea6c2f12448e9e1dfe01f68786092a924s
-salted_hash = salt + '!' + sha256( salt + password )
-# VmBgeaZ2PN!93d4b242b475a73d8f2d1de1...
+normal_hash = sha256(password)
+salted_hash = salt + '!' + sha256( salt + password ) # '!' sépare le sel du hash
+
+# normal hash: c36b9fc5e51d59f5179e9cc2a0e1f02ea6c2f12448e9e1dfe01f68786092a924s
+# salted hash: VmBgeaZ2PN!93d4b242b475a73d8f2d1de1... c'est ce qu'on va stocker
 ```
 
-=> password de longueur 8, mais sha256 basé sur une longueur aléatoire.
+=> password de longueur 8, mais stocké hashé avec un random de taille aléatoire.
+
+---
+
+### Salage - Vérification
+
+![fit](saltverif.png)
 
 ---
 
 ### Salage - pourquoi ça marche ?
 
-Attaque par dictionnaire ou par Rainbow table: basé sur le principe que le mot de passe fait une taille "raisonnable".
+|User |    Hash    | Salted hash |
+|-----| ------------ | ---- |
+|alice |  `4420d1918..`| `3’r43d!3dae5f..` |
+|jason |  `695ddccd9..`| `4fTfcz!5g896da..` |
+|mario  | `cd5cb49b8..`| `Jeikdiucgh!de34a28..` |
+|teresa | `73fb51a0c..`| `ùefs5FS!f290ff5..` |
+|bob   |  `4420d1918..`| `èFGz4Ds!99g6bde..` |
+|mike  |  `77b177de4..`| `DR"S2ç!22d45dd..` |
 
-```
-User    Hash            Salted hash
----------------------------------------------
-alice   4420d1918..     3’r43d!!3dae5f…
-jason   695ddccd9..     4fTfcz!!5g896da..
-mario   cd5cb49b8..     Jeikd`cgh!!de34a28’..
-teresa  73fb51a0c..     ùefs5FS!!f290ff5..
-bob     4420d1918..     èFGz4Ds!!99g6bde..
-mike    77b177de..      DR"S2ç!!22d45dd..
-```
+Impossible de dire qui a le même password qu'un autre.
+Impossible d'utiliser une attaque à dictionnaire sur mdp de longueur 8.
 
-Facile de trouver les mots de passe identiques avec un hash simple. Difficile avec un hash salé.
 
 ---
 
@@ -241,22 +272,10 @@ Facile de trouver les mots de passe identiques avec un hash simple. Difficile av
 - [HaveIBeenPwnd](https://haveibeenpwned.com/)
 - [Private Contact Discovery](https://signal.org/blog/private-contact-discovery/) (Signal)
 - Blockchain
-- Digital Signature (ça tombe bien c'est la suite, mais d'abord...)
-
+- Signatures digitales
 
 
 ----
-
-# À vous!
-
-Rendez-vous ici: https://masterind4.github.io
-
-Ou directement: `git clone https://github.com/masterind4/masterind4.github.io.git`
-
-Réalisez les exercices sur les fonctions de hachage.
-
-
----
 
 # Signatures digitales
 
@@ -265,7 +284,7 @@ Revenons au téléchargement de notre fichier iso Debian:
 Si ${sha256}(fichier) = S_{Controle}$ alors je sais que le fichier est *intègre* (les octets sont les mêmes que sur le serveur)
 
 Comment vérifier l'*authenticité* du fichier? (que c'est bien Debian qui me l'a fourni)
-=> La signature digitale.
+=> La signature digitale, qui utilise la crypto asymétrique
 
 ![bg right fit](pirate.png)
 
@@ -291,17 +310,16 @@ On a un ISO et un fichier de signature
 ![bg right fit](verify.png)
 
 ---
-
-On continue sur le TP, exercices sur la signature digitale.
-
----
 # Récapitulatif
 
-- Un *hash* (ou empreinte) assure l'intégrité de la donnée
-- Une signature assure *l'authenticité* de la donnée
-- (Le chiffrement assure la *confidentialité* de la donnée, cf le cours précédent)
+- **`C`**: Le chiffrement assure la **confidentialité** de la donnée, cf le cours précédent
+- **`I`**: Un *hash* (ou empreinte) assure **l'intégrité** de la donnée
+- **`A`**: Une signature assure **l'authenticité** de la donnée
+
+CIA n'est pas qu'une grande agence de sécurité Américaine, mais aussi l'un des fondements de la sécurité informatique.
 
 ---
+<!-- header: "Certificats" -->
 
 # Certificats
 
@@ -313,15 +331,16 @@ On continue sur le TP, exercices sur la signature digitale.
 Les certificats sont à la base de:
 
 - l'internet moderne
-- vos apps Android, iOS
+- la sécurité de vos apps Android, iOS, du boot à l'execution
 - la sécurité en entreprise
 - l'interception et l'analyse du traffic dans les pays liberticides
 - une myriade d'usages dès qu'il y a besoin d'authentification
 
-Format standardisé: X.509
+Format d'échange de certificats standardisé: X.509
+
+Ils utilisent tout ce qu'on vient de voir.
 
 ---
-<!-- header: "Certificats" -->
 
 Un certificat contient:
 
@@ -340,7 +359,8 @@ La signature du certificat provient:
 
 ---
 
-![bg fit](signatures.png)
+
+![bg h:680 ](signatures.png)
 
 ---
 
@@ -374,9 +394,9 @@ $ echo \
 
 ## Établissement de connection SSL/TLS
 
-[TLS 1.3](https://www.owasp.org/images/9/91/OWASPLondon20180125_TLSv1.3_Andy_Brodie.pdf#page=21)
+[TLS 1.3](https://davidwong.fr/tls13/)
 
-1. Le client établit un canal sécurisé avec le serveur (en utilisant un echange via Diffie-Helman)
+1. Le client établit un canal sécurisé (chiffrement symétrique) avec le serveur (en utilisant un echange via Diffie-Helman)
 2. Le serveur web présente son certificat au client
 3. Le client vérifie la chaîne de certificats pour authentifier le serveur. Envoie un challenge chiffré avec la clé publique du serveur, et envoie sa clé publique
 4. Le serveur web décrypte le challenge avec sa clé privée et le crypte avec la clé publique du client
@@ -385,7 +405,29 @@ $ echo \
 
 ---
 
-![fit bg](certifcheck.png)
+![fit](certifcheck.png)
+
+
+---
+
+### Le format x509 et PEM
+
+Un certificat peut se transporter en binaire ou en texte.
+
+x509 détermine le format binaire des information dans le certificat.
+
+PEM est un format d'échange (un "container") au format texte des certificats.
+
+En-tête: `-----BEGIN CERTIFICATE-----`
+
+Bas de page: `-----END CERTIFICATE-----`
+
+---
+
+### Exemple de certificat au format PEM
+
+![bg right fit](pem.png)
+
 
 ---
 
@@ -497,7 +539,7 @@ Authentification très forte, résiste aux MITM.
 
 ---
 
-On finit les exercices de TP, partie "Certificats"
+C'est la fin du cours, on fait une PAUSE. Puis on se lance dans le TP.
 
 ---
 # Questions
