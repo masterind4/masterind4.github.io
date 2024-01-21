@@ -181,7 +181,7 @@ Rendez-vous sur https://test.mosquitto.org/ssl/
 
     ![](cn.png)
 
-2. Pensez bien à récupérer le rootCA de mosquitto disponible ici: http://test.mosquitto.org/ssl/mosquitto.org.crt
+2. Récupérez le rootCA de mosquitto:
 
     wget http://test.mosquitto.org/ssl/mosquitto.org.crt
 
@@ -211,8 +211,8 @@ Passez vos clés, certificat client, et CA générés et récupérés dans la li
 
 ```bash
 ./mqttx-cli-linux-x64 bench pub -h test.mosquitto.org -p 8884 -l mqtts \
-   --key client.key --cert client.crt --ca mosquitto.org.crt \
-   -t master4 -im 5000 -c 1 -m "Coucou c'est $USER"
+   -v -t master4 -im 5000 -c 1 -m "Coucou c'est $USER" \
+   --key client.key --cert client.crt --ca mosquitto.org.crt
 ```
 
 J'enverrais des messages à intervalles réguliers

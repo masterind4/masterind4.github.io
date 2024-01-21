@@ -30,14 +30,14 @@ Guillaume Bienkowski — Braincube
 
 # Plan
 
-Cours
+### Cours
 - Fonctions de hachage
 - Signatures digitales
 - Certificats
 
 $\rightarrow$ Durée 1h30. 40 Slides. 2 minutes par slides, c'est *intense*.
 
-Mise en pratique (TP)
+### Mise en pratique (TP)
 
 $\rightarrow$ Durée 1h30
 
@@ -449,45 +449,34 @@ Les urls de ces deux mécanismes sont intégrées aux certificats sous la forme 
 
 Une simple liste, signée cryptographiquement par l'autorité de certification, qui liste les certificats révoqués.
 
+La liste est publique, et récupérable.
+
+<!--
 Avantages:
-
-- simple à créer,
-- simple à publier (même en HTTP)
-
-Inconvénients:
-
-
----
-### Certificate revocation list
-
-Une simple liste, signée cryptographiquement par l'autorité de certification, qui liste les certificats révoqués.
-
-Avantages:
-
 - simple à créer,
 - simple à publier (même en HTTP)
 
 Inconvénients:
 - la liste grossit régulièrement => chaque réponse doit envoyer la CRL en entier
 - 99% inutile: je ne suis intéressé que par mon certificat, pas le reste de la liste
-
----
+-->
 
 ### OCSP
 
-Méthode plus récente, basée sur une API:
+`Online Certificate Status Protocol`, basée sur une API:
 
-- je veux savoir si le certificat présenté par toto.com est valide
-- je contacte l'URL OCSP indiquée dans le certificat avec le Serial du certificat à vérifier
-- l'URL répond avec un "Good" / "No good" __signé__ pour dire si le certificat est bon ou pas
+Je demande à l'URL indiquée dans le certificat si celui-ci est toujours OK. Réponse immédiate
 
+![bg right h:680](crl.jpg)
+
+<!--
 Avantages:
 - très succinct: j'ai la réponse pour MON certificat, et seulement lui
 - et donc très économe en resources et rapide à répondre
 
 Inconvénients:
 - réponses signées mises en cache, sans expiration ni *nonce*, et donc susceptibles d'être rejouées à un client.
-
+-->
 ---
 
 <style scoped>
@@ -536,6 +525,11 @@ section {
 3. De mon côté je suis sûr de parler au même serveur car il m'a fourni sa clé publique.
 
 Authentification très forte, résiste aux MITM.
+
+---
+
+
+![](clientcert.png)
 
 ---
 
