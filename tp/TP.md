@@ -73,7 +73,7 @@ Téléchargez **la version linux** `amd64` de l'outil `prometheus`
 1. Vérifiez à l'aide de l'utilitaire `sha256sum <fichier téléchargé>` que la somme de contrôle est bonne.
 
 2. Extrayez le contenu du fichier (via la commande `tar -xzf <fichier tgz>` ou votre explorateur de fichiers)
-3. Placez vous dans le terminal dane le dossier créé (`prometheus-2.xxxx`) et lancez en ligne de commande l'utilitaire `./prometheus --version`
+3. Placez vous dans le terminal dans le dossier créé (`prometheus-2.xxxx`) et lancez en ligne de commande l'utilitaire `./prometheus --version`
 
 
 ----
@@ -92,6 +92,8 @@ Téléchargez la version 1.0 de `Antivirus.exe`
 
 2. Lancez `Antivirus.exe` (pour le rendre executable, utilisez la commande `chmod +x Antivirus.exe`)
 
+`./<fichier antivirus>`
+
 ----
 
 # Fonctions de hachage
@@ -102,10 +104,10 @@ Retournez sur https://masterind4.github.io/antivirus.html
 3. Téléchargez la version **MIROIR 2** de `Antivirus.exe`
 4. Vérifiez à l'aide de l'utilitaire `md5sum` que la somme de contrôle est bonne
 
-Lancez `Antivirus.exe` (pour le rendre executable, utilisez la commande `chmod +x Antivirus.exe`)
+Lancez `Antivirus_miroir2.exe` (pour le rendre executable, utilisez la commande `chmod +x` comme précédemment)
 
+Répondre aux questions suivantes dans le formulaire:
 1. Que s'est-il passé?
-
 2. Proposez vos idées pour que cela ne puisse plus se reproduire
 
 ---
@@ -148,7 +150,7 @@ Utilisez `gpg` pour:
 
 1. Utiliser la commande `man s_client` pour vous renseigner sur l'outil `openssl s_client` et comment l'invoquer pour vous connecter à un serveur TLS (pressez `q` pour quitter)
 
-2. Tenter une connection sur `letsencrypt.org` sur le port `443`, utiliser l'option `-showcerts` pour afficher les certificats renvoyés par le serveur et `-text` pour afficher les certificats au format PEM.
+2. Tenter une connection sur `letsencrypt.org` sur le port `443`, utiliser l'option `-showcerts` pour afficher les certificats renvoyés par le serveur en format PEM
 
 Vérifier que la connection retourne bien `Verify return code: 0 (ok)`, qui signifie que la chaîne de certification est bien valide. Tapez `<Entrée>` pour sortir.
 
