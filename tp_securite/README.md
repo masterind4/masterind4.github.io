@@ -7,4 +7,4 @@ curl -JL -o docker-compose https://github.com/docker/compose/releases/download/v
 chmod +x docker-compose
 ```
 
-Pour l'utiliser si installé comme ça: utiliser `./docker-compose` au lieu de `docker-compose.`
+Pour l'utiliser si installé comme ça: utiliser `./docker-compose` au lieu de `docker-compose`.

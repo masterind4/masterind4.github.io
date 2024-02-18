@@ -8,7 +8,7 @@ services:
       LC_ALL: en_US.UTF-8
     volumes:
       - ./run/stockage/:/data:rw
-      - ./depot/configuration.php:/var/www/html/configuration.php:ro
+      - ./depot/configuration.php:/var/www/filegator/configuration.php:ro
       - ./run/logs:/private/logs:rw
     ports:
       - 8080:80
