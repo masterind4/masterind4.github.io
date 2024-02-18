@@ -16,14 +16,16 @@ services:
   database:
     image: mariadb:10.7
     environment:
+      # voir ici pour les valeurs de configuration, notamment sur les users: https://mariadb.com/kb/en/mariadb-server-docker-official-image-environment-variables/#mariadb_user-mysql_user-mariadb_password_hash-mariadb_password-mysql_password
       MARIADB_ROOT_PASSWORD: Av3rYg0oDp4sZo4D
       MARIADB_DATABASE: authentication_depot
     volumes:
-      - ./db:/docker-entrypoint-initdb.d:rw
+      - ./db:/docker-entrypoint-initdb.d:ro
       - ./run/db:/var/lib/mysql:rw
 
   backup:
     image: atmoz/sftp:alpine
+    # passe en commande le <user>:<password>:<userid> qui sera autorisé à se connecter
     command: backup:B4ckUpP45s:1001
     volumes:
       - ./run/backup:/home/backup:rw
