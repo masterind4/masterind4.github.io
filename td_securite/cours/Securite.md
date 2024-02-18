@@ -284,17 +284,9 @@ On explore pas ici les utilisateurs admin ou le processus de création d'utilisa
    cd masterind4.github.io/td_securite
    ```
 
-2. Télécharger sur votre ordinateur le document suivant au format ODS: [document support](https://docs.google.com/spreadsheets/d/10soJKARve92w44vQMbgr1BqBLLsQonHyih3E5ho9-bk/edit?usp=sharing)
+2. Ouvrir le document `Scoring.ods`
 
-  Au besoin, il se trouve dans le dossier `td_securite` que vous venez de télécharger.
-
-3. Télécharger docker-compose
-
-    ```
-    # dans le dossier td_securite
-    curl -JL -o docker-compose https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64
-    chmod +x docker-compose
-    ```
+  Il se trouve dans le dossier `td_securite` que vous venez de télécharger.
 
 ---
 
@@ -325,19 +317,17 @@ Une fois les fichiers déposés, vos collègues affectés à la production peuve
 
 # Comment démarrer
 
-Clonez le dépôt, et rendez-vous dans le dossier `./td_securite` dans un terminal.
+Clonez le dépôt, et rendez-vous dans le dossier `td_securite` __dans un terminal__.
 
-À cet endroit, lancez la commande `docker-compose up` dans le terminal. Laisser le temps à docker-compose de faire son affaire, et ouvrez un navigateur sur http://localhost:8080
+À cet endroit, lancez la commande `./docker-compose up` dans le terminal. Laisser le temps à docker-compose de faire son affaire, et ouvrez un navigateur sur http://localhost:8080
 
-`Ctrl + C` pour arrêter le serveur dans le terminal, et `docker-compose up` pour relancer. `docker-compose down` pour complètement supprimer les logiciels.
+- `Ctrl + C` pour arrêter le serveur dans le terminal
+- `./docker-compose up` pour lancer ou relancer.
+- `./docker-compose build` pour recompiler filegator, si changé
+- `./docker-compose down` pour complètement supprimer les logiciels.
 
-Les fichiers manipulés par le site sont disponibles dans le dossier `./td_securite/run/{stockage,backup}`
+Les fichiers manipulés par le site sont visibles dans le dossier `./td_securite/run/{stockage,backup}`
 
----
-
-# Si docker-compose n'est pas installé
-
-Consulter le fichhier `README.md` dans le dossier `td_securite` pour trouver comment installer l'executable.
 
 ---
 
@@ -360,7 +350,7 @@ Les utilisateurs internes ont un mot de passe dédié:
 # Prise en main du TD
 
 Amusez-vous quelques minutes avec le portail. Constatez que les fonctionnalités attendues sont présentes:
-- les fournisseurs peuvent envoyer des fichiers
+- les fournisseurs peuvent envoyer des fichiers (faites le pour tester)
 - les fichiers sont stockés à la fois dans le dossier `stockage` ET le dossier `backup`
 - Les utilisateurs standards peuvent consulter ces fichiers
 
@@ -370,7 +360,9 @@ Nous allons procéder avec les 4 étapes de l'analyse de risques.
 
 ## Étape 1: Détermination des biens
 
-Lister les données manipulées par l'ensemble du système. Pour cela, on crée ensemble un schéma de flow de données. Ensuite, utiliser la première feuille du document Drive fourni.
+On fait ça ensemble.
+
+Lister les données manipulées par l'ensemble du système. Pour cela, on crée ensemble un schéma de flow de données. Ensuite, utiliser la première feuille du document ODS `Scoring.ods` fourni.
 
 ![fit bg right](biens.png)
 
@@ -379,31 +371,16 @@ Lister les données manipulées par l'ensemble du système. Pour cela, on crée 
 
 ## Étape 2: Énumération des manières d'enfreindre le CID sur ces biens
 
-Laissez votre imagination parler. Pour cela utiliser la 2ème feuille du document Drive fourni, en remplissant les colonnes "Vulnérabilité" et "Risque". Sélectionner le bien à gauche dans la liste déroulante.
+Laissez votre imagination parler. Pour cela utiliser la 2ème feuille du document `Scoring.ods` fourni, en remplissant les colonnes "Vulnérabilité" et "Risque". Sélectionner le bien à gauche dans la liste déroulante.
 
 ![fit bg right](vuln.png)
 
 ---
 
-## Étape 2 bis: On scanne les images
-
-Utiliser l'executable trivy que vous avez dans le dossier `./td_securite`:
-
-```bash
-# liste les images docker présentes
-docker images
-# scanne une image et produit un rapport
-# exemple: ./trivy i mariadb:10.7
-./trivy image <nom image>
-```
-
-Évaluation du rapport pour l'image `td_securite_depot`
-
----
 
 ## Étape 3: Notation des menaces
 
-On retourne tous ensemble pour faire une revue des vulnérabilités trouvées. On applique un score à ces risques et on liste ceux qu'on souhaite corriger.
+On applique un score à ces risques et on liste ceux qu'on souhaite corriger.
 
 ---
 
@@ -413,25 +390,33 @@ On retourne tous ensemble pour faire une revue des vulnérabilités trouvées. O
 
 ---
 
-## Mise à jour de l'image docker de base pour le service de fichier
+## Mise à jour de Filegator
 
-- Utiliser une version plus récente de PHP (voir hub.docker.com, utiliser le semver)
-- Utiliser la dernière version de filegator disponible sur internet
+- Se rendre sur la page des releases de Filegator: https://github.com/filegator/filegator/releases
+- Trouver la release actuelle (v7.8.5)
+- Identifier une nouvelle version plus récente qui corrige des failles de sécurité
+- Modifier le Dockerfile dans `td_securite/depot/Dockerfile` pour utiliser cette version
+- Reconstruire l'image puis relancer docker-compose:
+    - `Ctrl + C` dans votre terminal pour arrêter les logiciels
+    - `./docker-compose build` pour reconstruire filegator
+    - `./docker-compose up` pour relancer les logiciels avec cette version
 
-Attention: bien reconstruire l'image avant de relancer: `docker-compose build`
-
-Constater que ça fonctionne encore, et que trivy est bien plus heureux.
+Constater que ça fonctionne encore.
 
 ---
 
 
 ## Utilisation d'un utilisateur dédié pour la base MariaDB
 
-Modifier les variables d'environnement passées au container mariadb pour créer un utilisateur dédié à la base d'authentification
+Modifier les variables d'environnement passées au container `database` pour utiliser un utilisateur dédié à la base d'authentification.
 
-Modifier la configuration du dépôt de fichier pour utiliser cet utilisateur.
+- [S'inspirer de la documentation ici](https://mariadb.com/kb/en/mariadb-server-docker-official-image-environment-variables/#mariadb_user-mysql_user-mariadb_password_hash-mariadb_password-mysql_password) pour modifier la section `database` du fichier `td_securite/docker-compose.yml`
 
-Bien supprimer les données dans `./run/db/*` et redémarrer la DB.
+- Modifier la configuration du dépôt de fichier pour utiliser cet utilisateur: `td_securite/depot/configuration.php` (chercher `database` dans ce fichier et faire le nécessaire pour modifier)
+- `Ctrl + C` pour stopper les logiciels
+- Bien supprimer les données (`rm -r td_securite/run/db/*` et tout redémarrer:
+
+    `./docker-compose up` (puis vérifier que tout refonctionne)
 
 ---
 
