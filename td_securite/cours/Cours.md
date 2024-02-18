@@ -275,18 +275,26 @@ On explore pas ici les utilisateurs admin ou le processus de création d'utilisa
 
 # On démarre le TD
 
-
 ---
 
-1. Télécharger le code du TP:
+1. Télécharger le code du TD:
 
    ```
    git clone https://github.com/masterind4/masterind4.github.io.git
-   cd masterind4.github.io/tp_securite
+   cd masterind4.github.io/td_securite
    ```
 
 2. Télécharger sur votre ordinateur le document suivant au format ODS: [document support](https://docs.google.com/spreadsheets/d/10soJKARve92w44vQMbgr1BqBLLsQonHyih3E5ho9-bk/edit?usp=sharing)
 
+  Au besoin, il se trouve dans le dossier `td_securite` que vous venez de télécharger.
+
+3. Télécharger docker-compose
+
+    ```
+    # dans le dossier td_securite
+    curl -JL -o docker-compose https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64
+    chmod +x docker-compose
+    ```
 
 ---
 
@@ -317,19 +325,19 @@ Une fois les fichiers déposés, vos collègues affectés à la production peuve
 
 # Comment démarrer
 
-Clonez le dépôt, et rendez-vous dans le dossier `./tp_securite` dans un terminal.
+Clonez le dépôt, et rendez-vous dans le dossier `./td_securite` dans un terminal.
 
 À cet endroit, lancez la commande `docker-compose up` dans le terminal. Laisser le temps à docker-compose de faire son affaire, et ouvrez un navigateur sur http://localhost:8080
 
 `Ctrl + C` pour arrêter le serveur dans le terminal, et `docker-compose up` pour relancer. `docker-compose down` pour complètement supprimer les logiciels.
 
-Les fichiers manipulés par le site sont disponibles dans le dossier `./tp_securite/run/{stockage,backup}`
+Les fichiers manipulés par le site sont disponibles dans le dossier `./td_securite/run/{stockage,backup}`
 
 ---
 
 # Si docker-compose n'est pas installé
 
-Consulter le fichhier `README.md` dans le dossier `tp_securite` pour trouver comment installer l'executable.
+Consulter le fichhier `README.md` dans le dossier `td_securite` pour trouver comment installer l'executable.
 
 ---
 
@@ -379,7 +387,7 @@ Laissez votre imagination parler. Pour cela utiliser la 2ème feuille du documen
 
 ## Étape 2 bis: On scanne les images
 
-Utiliser l'executable trivy que vous avez dans le dossier `./tp_securite`:
+Utiliser l'executable trivy que vous avez dans le dossier `./td_securite`:
 
 ```bash
 # liste les images docker présentes
@@ -389,7 +397,7 @@ docker images
 ./trivy image <nom image>
 ```
 
-Évaluation du rapport pour l'image `tp_securite_depot`
+Évaluation du rapport pour l'image `td_securite_depot`
 
 ---
 
