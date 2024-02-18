@@ -14,5 +14,5 @@ Cours.pdf: cours/Cours.md
 TP.pdf: tp/TP.md
 	${marp_command} tp/TP.md -o TP.pdf
 
-Securite.pdf: tp_securite/cours/Cours.md
-	${marp_command} tp_securite/cours/Cours.md -o Securite.pdf
+Securite.pdf: td_securite/cours/Cours.md
+	${marp_command} td_securite/cours/Cours.md -o Securite.pdf
