@@ -394,8 +394,8 @@ On applique un score à ces risques et on liste ceux qu'on souhaite corriger.
 
 - Se rendre sur la page des releases de Filegator: https://github.com/filegator/filegator/releases
 - Trouver la release actuelle (v7.8.5)
-- Identifier une nouvelle version plus récente qui corrige des failles de sécurité
-- Modifier le Dockerfile dans `td_securite/depot/Dockerfile` pour utiliser cette version
+- Identifier une nouvelle version plus récente qui corrige des failles de sécurité (**attention aux changements breaking**)
+- Modifier le Dockerfile dans `td_securite/depot/Dockerfile` pour utiliser cette version (+ modif docker compose si besoin)
 - Reconstruire l'image puis relancer docker-compose:
     - `Ctrl + C` dans votre terminal pour arrêter les logiciels
     - `./docker-compose build` pour reconstruire filegator
