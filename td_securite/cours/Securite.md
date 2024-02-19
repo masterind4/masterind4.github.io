@@ -275,18 +275,9 @@ On explore pas ici les utilisateurs admin ou le processus de création d'utilisa
 
 # On démarre le TD
 
----
+Comme la dernière fois, il y a un questionnaire à remplir ensuite dans Google Forms:
 
-1. Télécharger le code du TD:
-
-   ```
-   git clone https://github.com/masterind4/masterind4.github.io.git
-   cd masterind4.github.io/td_securite
-   ```
-
-2. Ouvrir le document `Scoring.ods`
-
-  Il se trouve dans le dossier `td_securite` que vous venez de télécharger.
+https://docs.google.com/forms/d/1-eriiBKJvz2Og5hci2lgVB7RFahE-BsTmY18BE1PVl0/prefill
 
 ---
 
@@ -305,13 +296,34 @@ Il faudra utiliser l'analyse de risques que l'on vient de voir en cours, afin d'
 Votre société fait appel à plusieurs sous traitants qui vous fournissent en pièces diverses pour votre production.
 Leur contrat de fourniture stipule qu'ils doivent régulièrement vous fournir des rapports de contrôle qualité, ainsi que des rapports de production via un système d'échange de fichiers, de manière automatisée.
 
-Une fois les fichiers déposés, vos collègues affectés à la production peuvent les consulter. *Ils n'ont pas besoin de les modifier par contre.* Vous avez déjà anticipé des pertes éventuelles de fichiers et avez mis en place une sauvegarde régulière de ces fichiers.
+Une fois les fichiers déposés, vos collègues affectés à la qualité peuvent les consulter. *Ils n'ont pas besoin de les modifier par contre.*
+
+Côté production, vos équipes sont aussi responsables d'ajouter des fichiers dans les dossier.
+
+Vous avez déjà anticipé des pertes éventuelles de fichiers et avez mis en place une sauvegarde régulière de ces fichiers.
 
 
 ---
 # Schéma
 
 ![bg right fit](schema.png)
+
+
+
+---
+
+# Comment démarrer
+
+1. Télécharger le code du TD:
+
+   ```
+   git clone https://github.com/masterind4/masterind4.github.io.git
+   cd masterind4.github.io/td_securite
+   ```
+
+2. Ouvrir le document `Scoring.ods`
+
+  Il se trouve dans le dossier `td_securite` que vous venez de télécharger.
 
 ---
 
@@ -335,7 +347,7 @@ Les fichiers manipulés par le site sont visibles dans le dossier `./td_securite
 
 Les fournisseurs ont un login/mot de passe pour envoyer leurs fichiers sur l'interface web http://localhost:8080
 
-`fournisseur:SomeThinGh4sToGive`
+`fournisseur:HarDt0guEss`
 
 L'admin a un login/mot de passe:
 
@@ -352,7 +364,7 @@ Les utilisateurs internes ont un mot de passe dédié:
 Amusez-vous quelques minutes avec le portail. Constatez que les fonctionnalités attendues sont présentes:
 - les fournisseurs peuvent envoyer des fichiers (faites le pour tester)
 - les fichiers sont stockés à la fois dans le dossier `stockage` ET le dossier `backup`
-- Les utilisateurs standards peuvent consulter ces fichiers
+- Les utilisateurs internes peuvent consulter ces fichiers et en ajouter (peut être pas tous non??)
 
 Nous allons procéder avec les 4 étapes de l'analyse de risques.
 
@@ -360,7 +372,7 @@ Nous allons procéder avec les 4 étapes de l'analyse de risques.
 
 ## Étape 1: Détermination des biens
 
-On fait ça ensemble.
+**On fait ça ensemble.**
 
 Lister les données manipulées par l'ensemble du système. Pour cela, on crée ensemble un schéma de flow de données. Ensuite, utiliser la première feuille du document ODS `Scoring.ods` fourni.
 
@@ -370,6 +382,8 @@ Lister les données manipulées par l'ensemble du système. Pour cela, on crée 
 ---
 
 ## Étape 2: Énumération des manières d'enfreindre le CID sur ces biens
+
+**On fait ça ensemble**
 
 Laissez votre imagination parler. Pour cela utiliser la 2ème feuille du document `Scoring.ods` fourni, en remplissant les colonnes "Vulnérabilité" et "Risque". Sélectionner le bien à gauche dans la liste déroulante.
 
@@ -414,7 +428,7 @@ Modifier les variables d'environnement passées au container `database` pour uti
 
 - Modifier la configuration du dépôt de fichier pour utiliser cet utilisateur: `td_securite/depot/configuration.php` (chercher `database` dans ce fichier et faire le nécessaire pour modifier)
 - `Ctrl + C` pour stopper les logiciels
-- Bien supprimer les données (`rm -r td_securite/run/db/*` et tout redémarrer:
+- Bien supprimer les données (`rm -r run/db/*`) et tout redémarrer:
 
     `./docker-compose up` (puis vérifier que tout refonctionne)
 
@@ -422,7 +436,11 @@ Modifier les variables d'environnement passées au container `database` pour uti
 
 ## Utilisateurs dédiés à chaque prestataire
 
-Utiliser l'UI de Filegator ou alors modifier le script `init.sql` pour créer des utilisateurs dédiés
+Mdifier le script `db/init.sql` pour créer des utilisateurs dédiés pour chaque cas: un par fournisseur, et chaque utilisateur interne (QA et Prod).
+
+**Bien ajuster leur `homedir` et leurs droits pour qu'ils aient le strict minimum requis pour faire leur job.**
+
+Si vous modifiez le fichier `db/init.sql`, il faudra supprimer la base de données et relancer les logiciels comme dans l'étape précédente.
 
 ---
 
@@ -434,7 +452,6 @@ Utiliser l'UI de Filegator ou alors modifier le script `init.sql` pour créer de
 - Rendre le stockage hautement disponible via un stockage partagé
 - Changer le frontal pour une authentification par certificats ou clés SSH
 - Passer le backup à une authentification forte via clé SSH plutôt qu'un login/pass
-- Faire tourner trivy régulièrement et remonter une alerte lorsque les images sont vulnérables
 
 ---
 

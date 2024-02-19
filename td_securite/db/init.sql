@@ -16,9 +16,10 @@ INSERT INTO `users`
 VALUES
 ('guest', 'Guest', 'guest', '', '/', ''),
 -- admin:An0tHerPassW0rd // hash généré via https://phppasswordhash.com/
+-- cet utilisateur a tous les droits, vous pourrez vous servir de cette liste pour ajuster les droits des autres
 ('admin', 'Admin', 'admin', 'read|write|upload|download|batchdownload|zip', '/', '$2y$10$n3fHgzxlXG/qnULh8BjMfuN8ysnV8kB8cse7XuB3M/BKoic7H9zDq'),
 -- fournisseur:HarDt0guEss // hash généré via https://phppasswordhash.com/
-('fournisseur', 'Fournisseur', 'user', 'read|write|upload|download', '/', '$2y$10$bdk328EKlSqWnfUYCQDCi.8R77R/1lkYllSXsZnennhVn5bjdfQUK'),
+-- "Homedir = /" => les fournisseurs voient tous les dossiers
 -- userinterne:SomeThinGh4sToGive // hash généré via https://phppasswordhash.com/
 ('userinterne', 'User Interne', 'user', 'read|write|upload|download', '/', '$2y$10$GY2aC2EIaBvm6h48NfylW.dbA74TaMFykfvL4JHxBgDUq9rdwifpy')
 ;
